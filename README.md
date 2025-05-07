@@ -135,5 +135,5 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 
 ## Acknowledgments
 
-- **Icons** by [Lucide](https://lucide.dev/).
-- **Background patterns** by [Hero Patterns](https://heropatterns.com/).
+- **Icons** by [Lucide](https://lucide.dev/), licensed under the **ISC License**.
+- **Background patterns** by [Hero Patterns](https://heropatterns.com/), licensed under the **CC BY 4.0 License**.
