@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { UserCircle, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
+import SignInButton from '@/components/ui/signinbutton'; // Use the SignInButton component
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/libs/utils';
 
@@ -24,7 +25,7 @@ const Header = () => {
 
                 <div className="hidden md:flex items-center gap-6">
                     <NavLinks className="flex gap-6" />
-                    <UserButton />
+                    <SignInButton /> {/* Replace UserButton with SignInButton */}
                 </div>
 
                 <Sheet>
@@ -37,7 +38,7 @@ const Header = () => {
                     <SheetContent side="right" className="bg-background">
                         <div className="flex flex-col gap-6 mt-8">
                             <NavLinks className="flex flex-col gap-4" />
-                            <UserButton />
+                            <SignInButton /> {/* Replace UserButton with SignInButton */}
                         </div>
                     </SheetContent>
                 </Sheet>
@@ -62,15 +63,6 @@ const NavLinks = ({ className }: { className?: string }) => {
                 My Library
             </Link>
         </nav>
-    );
-};
-
-const UserButton = () => {
-    return (
-        <Button variant="outline" size="sm" className="gap-2">
-            <UserCircle className="h-4 w-4" />
-            <span>Sign In</span>
-        </Button>
     );
 };
 

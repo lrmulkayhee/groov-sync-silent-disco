@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageWrapper from '@/components/layout/PageWrapper';
 import SongCard, { Song } from '@/components/disco/SongCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import MusicServiceConnector from '@/components/music/MusicServiceConnector';
+import supabase from '@/libs/supabase';
 import { toast } from 'sonner';
 
 // Mock data for songs
@@ -80,6 +81,21 @@ const Library = () => {
     const [selectedSong, setSelectedSong] = useState<string | null>(null);
     const [playingSong, setPlayingSong] = useState<string | null>(null);
     const [bpmRange, setBpmRange] = useState([60, 180]);
+    const [user, setUser] = useState<any>(null);
+
+    // Fetch the signed-in user's data
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            if (error) {
+                console.error('Error fetching user:', error.message);
+            } else {
+                setUser(user);
+            }
+        };
+
+        fetchUser();
+    }, []);
 
     const handleConnect = (service: 'spotify' | 'apple') => {
         console.log(`Connected to ${service}`);
@@ -102,10 +118,34 @@ const Library = () => {
     return (
         <PageWrapper>
             <div className="container px-4 py-8">
-                <h1 className="text-3xl font-bold mb-2">Your Music Library</h1>
-                <p className="text-muted-foreground mb-8">
-                    Browse and manage your synced tracks
-                </p>
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 className="text-3xl font-bold mb-2">Your Music Library</h1>
+                        <p className="text-muted-foreground">
+                            Browse and manage your synced tracks
+                        </p>
+                    </div>
+                    {user && (
+                        <div className="flex items-center gap-4">
+                            {user.user_metadata?.avatar_url ? (
+                                <img
+                                    src={user.user_metadata.avatar_url}
+                                    alt="Avatar"
+                                    className="h-10 w-10 rounded-full"
+                                />
+                            ) : (
+                                <div className="h-10 w-10 rounded-full bg-muted-foreground flex items-center justify-center">
+                                    <span className="text-white text-sm font-bold">
+                                        {user.user_metadata?.full_name?.[0] || "U"}
+                                    </span>
+                                </div>
+                            )}
+                            <span className="text-sm font-medium">
+                                {user.user_metadata?.full_name || "User"}
+                            </span>
+                        </div>
+                    )}
+                </div>
 
                 {!connected ? (
                     <div className="max-w-2xl mx-auto py-12">

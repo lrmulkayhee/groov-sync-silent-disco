@@ -8,6 +8,7 @@ import CreateDisco from "@/pages/CreateDisco";
 import JoinDisco from "@/pages/JoinDisco";
 import DiscoSession from "@/pages/DiscoSession";
 import Library from "@/pages/Library";
+import Profile from "@/pages/Profile"; // Import the Profile page
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
                     <Route path="/join" element={<JoinDisco />} />
                     <Route path="/session/:id" element={<DiscoSession />} />
                     <Route path="/library" element={<Library />} />
+                    <Route path="/profile" element={<Profile />} /> {/* Add Profile route */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>
