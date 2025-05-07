@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 260 20% 10%;
+        --foreground: 240 10% 95%;
+
+        --card: 260 15% 15%;
+        --card-foreground: 240 10% 95%;
+
+        --popover: 260 15% 15%;
+        --popover-foreground: 240 10% 95%;
+
+        --primary: 265 100% 66%;
+        --primary-foreground: 0 0% 100%;
+
+        --secondary: 220 100% 66%;
+        --secondary-foreground: 0 0% 100%;
+
+        --muted: 260 15% 20%;
+        --muted-foreground: 240 10% 70%;
+
+        --accent: 310 100% 66%;
+        --accent-foreground: 0 0% 100%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 260 15% 25%;
+        --input: 260 15% 25%;
+        --ring: 265 100% 66%;
+
+        --radius: 1rem;
+    }
+
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+}
+
+@layer components {
+    .wave-bar {
+        @apply w-1 rounded-full mx-0.5 bg-groove-purple;
+        animation: wave 1.3s ease-in-out infinite;
+    }
+
+    .wave-bar:nth-child(2) {
+        animation-delay: 0.2s;
+        @apply bg-groove-blue;
+    }
+
+    .wave-bar:nth-child(3) {
+        animation-delay: 0.4s;
+        @apply bg-gradient-to-t from-groove-purple to-groove-blue;
+    }
+
+    .wave-bar:nth-child(4) {
+        animation-delay: 0.6s;
+        @apply bg-groove-pink;
+    }
+
+    .wave-bar:nth-child(5) {
+        animation-delay: 0.8s;
+        @apply bg-groove-purple;
+    }
+
+    .wave-bar:nth-child(6) {
+        animation-delay: 1s;
+        @apply bg-groove-blue;
+    }
+
+    .wave-bar:nth-child(7) {
+        animation-delay: 0.4s;
+        @apply bg-gradient-to-t from-groove-blue to-groove-pink;
+    }
+}
