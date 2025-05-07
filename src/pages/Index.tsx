@@ -22,7 +22,7 @@ const Index = () => {
 
                         <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-groove-purple via-groove-blue to-groove-pink">
-                                GrooveSync
+                                GroovSync
                             </span>{" "}
                             Silent Disco
                         </h1>

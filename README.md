@@ -1,8 +1,8 @@
-# Groove Sync Silent Disco 🎶
+# GroovSync Silent Disco 🎶
 
-## Groove Sync Silent Disco Overview
+## GroovSync Silent Disco Overview
 
-Groove Sync Silent Disco is a **web application** that allows users to create and join synchronized music sessions. Users can connect their **Spotify** or **Apple Music** accounts, browse their music libraries, and enjoy a shared musical experience with friends.
+GroovSync Silent Disco is a **web application** that allows users to create and join synchronized music sessions. Users can connect their **Spotify** or **Apple Music** accounts, browse their music libraries, and enjoy a shared musical experience with friends.
 
 ---
 
@@ -45,8 +45,8 @@ Groove Sync Silent Disco is a **web application** that allows users to create an
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/your-username/groove-sync-silent-disco.git
-    cd groove-sync-silent-disco
+    git clone https://github.com/your-username/groovsync-silent-disco.git
+    cd groovsync-silent-disco
     ```
 
 2. **Install dependencies**:

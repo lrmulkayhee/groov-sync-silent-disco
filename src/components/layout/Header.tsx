@@ -6,6 +6,14 @@ import supabase from '@/libs/supabase';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/libs/utils';
 
+const AVATAR_OPTIONS = {
+    purple: 'bg-groove-purple',
+    blue: 'bg-groove-blue',
+    pink: 'bg-groove-pink',
+    green: 'bg-green-500',
+    yellow: 'bg-yellow-500',
+};
+
 const Header = () => {
     const [user, setUser] = useState<any>(null);
     const navigate = useNavigate();
@@ -48,14 +56,14 @@ const Header = () => {
                     <NavLinks className="flex gap-6" />
                     {user ? (
                         <div className="flex items-center gap-4">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="text-sm font-medium"
+                            {/* Render avatar as a styled circle */}
+                            <div
+                                className={`h-8 w-8 rounded-full flex items-center justify-center cursor-pointer ${AVATAR_OPTIONS[user.user_metadata?.avatar || 'purple']
+                                    }`}
                                 onClick={() => navigate('/profile')} // Navigate to Profile Page
                             >
-                                {user.user_metadata?.full_name || 'Profile'}
-                            </Button>
+                                <div className="h-2 w-2 bg-black rounded-full"></div>
+                            </div>
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -87,14 +95,13 @@ const Header = () => {
                             <NavLinks className="flex flex-col gap-4" />
                             {user ? (
                                 <div className="flex flex-col gap-4">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="text-sm font-medium"
+                                    <div
+                                        className={`h-8 w-8 rounded-full flex items-center justify-center cursor-pointer ${AVATAR_OPTIONS[user.user_metadata?.avatar || 'purple']
+                                            }`}
                                         onClick={() => navigate('/profile')} // Navigate to Profile Page
                                     >
-                                        {user.user_metadata?.full_name || 'Profile'}
-                                    </Button>
+                                        <div className="h-2 w-2 bg-black rounded-full"></div>
+                                    </div>
                                     <Button
                                         variant="outline"
                                         size="sm"

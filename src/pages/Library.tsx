@@ -125,26 +125,6 @@ const Library = () => {
                             Browse and manage your synced tracks
                         </p>
                     </div>
-                    {user && (
-                        <div className="flex items-center gap-4">
-                            {user.user_metadata?.avatar_url ? (
-                                <img
-                                    src={user.user_metadata.avatar_url}
-                                    alt="Avatar"
-                                    className="h-10 w-10 rounded-full"
-                                />
-                            ) : (
-                                <div className="h-10 w-10 rounded-full bg-muted-foreground flex items-center justify-center">
-                                    <span className="text-white text-sm font-bold">
-                                        {user.user_metadata?.full_name?.[0] || "U"}
-                                    </span>
-                                </div>
-                            )}
-                            <span className="text-sm font-medium">
-                                {user.user_metadata?.full_name || "User"}
-                            </span>
-                        </div>
-                    )}
                 </div>
 
                 {!connected ? (
