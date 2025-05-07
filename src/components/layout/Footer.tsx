@@ -14,7 +14,7 @@ const Footer = () => {
                         </div>
                     </div>
                     <span className="text-sm font-medium">
-                        GrooveSync Silent Disco
+                        GroovSync Silent Disco
                     </span>
                 </div>
 
@@ -28,18 +28,13 @@ const Footer = () => {
                     <Link to="/privacy" className="hover:text-foreground transition">
                         Privacy
                     </Link>
-                    <a
-                        href="https://lovable.dev"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-foreground transition"
-                    >
-                        Built with Lovable
-                    </a>
+                    <Link to="/contact" className="hover:text-foreground transition">
+                        Contact
+                    </Link>
                 </nav>
 
                 <div className="text-xs text-muted-foreground">
-                    © {new Date().getFullYear()} GrooveSync
+                    © {new Date().getFullYear()} GroovSync
                 </div>
             </div>
         </footer>
