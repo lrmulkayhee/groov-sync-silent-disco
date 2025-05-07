@@ -85,7 +85,7 @@ const Index = () => {
                         Create a session in seconds, invite your friends, and enjoy a synchronized musical experience.
                     </p>
                     <Button asChild size="lg" className="bg-gradient-to-r from-groove-purple to-groove-blue hover:opacity-90">
-                        <Link to="/create" className="flex items-center gap-2">
+                        <Link to="/register" className="flex items-center gap-2">
                             Get Started <ArrowRight className="h-4 w-4" />
                         </Link>
                     </Button>
