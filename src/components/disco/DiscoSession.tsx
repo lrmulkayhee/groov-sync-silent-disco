@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Copy, UsersRound, Music } from 'lucide-react';
-import WaveformVisualizer from '../music/WaveformVisualizer';
-import BpmDisplay from '../music/BpmDisplay';
+import WaveformVisualizer from '@/components/music/WaveformVisualizer';
+import BpmDisplay from '@/components/music/BpmDisplay';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
+import { cn } from '@/libs/utils';
 
 interface DiscoSessionProps {
     id: string;

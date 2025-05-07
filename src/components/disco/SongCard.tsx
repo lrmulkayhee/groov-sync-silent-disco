@@ -2,8 +2,8 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, Pause } from 'lucide-react';
-import BpmDisplay from '../music/BpmDisplay';
-import { cn } from '@/lib/utils';
+import BpmDisplay from '@/components/music/BpmDisplay';
+import { cn } from '@/libs/utils';
 
 export interface Song {
     id: string;

@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -94,32 +93,32 @@ export default {
 					}
 				},
 				'pulse-slow': {
-					'0%, 100%': { 
+					'0%, 100%': {
 						opacity: '1',
 						transform: 'scale(1)'
 					},
-					'50%': { 
+					'50%': {
 						opacity: '0.8',
-						transform: 'scale(1.05)' 
+						transform: 'scale(1.05)'
 					}
 				},
 				'wave': {
-					'0%': { 
-						transform: 'scaleY(1)' 
+					'0%': {
+						transform: 'scaleY(1)'
 					},
-					'50%': { 
-						transform: 'scaleY(0.5)' 
+					'50%': {
+						transform: 'scaleY(0.5)'
 					},
-					'100%': { 
-						transform: 'scaleY(1)' 
+					'100%': {
+						transform: 'scaleY(1)'
 					}
 				},
 				'spin-slow': {
-					'0%': { 
-						transform: 'rotate(0deg)' 
+					'0%': {
+						transform: 'rotate(0deg)'
 					},
-					'100%': { 
-						transform: 'rotate(360deg)' 
+					'100%': {
+						transform: 'rotate(360deg)'
 					}
 				}
 			},
