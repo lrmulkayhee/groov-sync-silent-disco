@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import supabase from '@/libs/supabase';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import Header from '@/components/layout/Header'; // Import Header
-import Footer from '@/components/layout/Footer'; // Import Footer
-import PageWrapper from '@/components/layout/PageWrapper'; // Optional wrapper for consistent layout
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import PageWrapper from '@/components/layout/PageWrapper';
 
 const AVATAR_OPTIONS = [
     { id: 'purple', color: 'bg-groove-purple' },
@@ -17,9 +17,11 @@ const AVATAR_OPTIONS = [
 const Profile = () => {
     const [user, setUser] = useState<any>(null);
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [selectedAvatar, setSelectedAvatar] = useState<string>('purple');
     const [password, setPassword] = useState('');
     const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+    const [activityLogs, setActivityLogs] = useState<any[]>([]);
 
     // Fetch user data on component mount
     useEffect(() => {
@@ -30,11 +32,25 @@ const Profile = () => {
             } else {
                 setUser(user);
                 setUsername(user?.user_metadata?.username || '');
+                setEmail(user?.email || '');
                 setSelectedAvatar(user?.user_metadata?.avatar || 'purple');
             }
         };
 
+        const fetchActivityLogs = async () => {
+            const { data, error } = await supabase
+                .from('activity_logs') // Replace with your actual table name
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) {
+                console.error('Error fetching activity logs:', error.message);
+            } else {
+                setActivityLogs(data || []);
+            }
+        };
+
         fetchUser();
+        fetchActivityLogs();
     }, []);
 
     // Update username
@@ -48,6 +64,18 @@ const Profile = () => {
             console.error('Error updating username:', error.message);
         } else {
             toast.success('Username updated successfully');
+        }
+    };
+
+    // Update email
+    const handleUpdateEmail = async () => {
+        const { error } = await supabase.auth.updateUser({ email });
+
+        if (error) {
+            toast.error('Failed to update email');
+            console.error('Error updating email:', error.message);
+        } else {
+            toast.success('Email updated successfully');
         }
     };
 
@@ -83,14 +111,34 @@ const Profile = () => {
         toast.success(is2FAEnabled ? '2FA disabled' : '2FA enabled');
     };
 
+    // Delete account
+    const handleDeleteAccount = async () => {
+        const { error } = await supabase.auth.signOut(); // Sign out the user first
+        if (error) {
+            toast.error('Failed to delete account');
+            console.error('Error deleting account:', error.message);
+        } else {
+            toast.success('Account deleted successfully');
+            // Redirect or handle post-deletion logic
+        }
+    };
+
     return (
         <PageWrapper>
-            <Header /> {/* Add Header */}
+            <Header />
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-3xl font-bold mb-6">Profile Settings</h1>
 
                 {user ? (
                     <div className="space-y-6">
+                        {/* Display Current Profile Info */}
+                        <div>
+                            <h2 className="text-xl font-semibold">Current Profile</h2>
+                            <p><strong>Username:</strong> {username}</p>
+                            <p><strong>Email:</strong> {email}</p>
+                            <p><strong>Avatar:</strong> <span className={`inline-block w-6 h-6 rounded-full ${AVATAR_OPTIONS.find(option => option.id === selectedAvatar)?.color}`} /></p>
+                        </div>
+
                         {/* Username */}
                         <div>
                             <label className="block text-sm font-medium mb-2">Username</label>
@@ -103,6 +151,18 @@ const Profile = () => {
                             <Button onClick={handleUpdateUsername} className="mt-2">Update Username</Button>
                         </div>
 
+                        {/* Email */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="border rounded px-3 py-2 w-full"
+                            />
+                            <Button onClick={handleUpdateEmail} className="mt-2">Update Email</Button>
+                        </div>
+
                         {/* Avatar */}
                         <div>
                             <label className="block text-sm font-medium mb-2">Avatar</label>
@@ -110,8 +170,7 @@ const Profile = () => {
                                 {AVATAR_OPTIONS.map((option) => (
                                     <button
                                         key={option.id}
-                                        className={`w-10 h-10 rounded-full ${option.color} ${selectedAvatar === option.id ? 'ring-2 ring-offset-2 ring-blue-500' : ''
-                                            }`}
+                                        className={`w-10 h-10 rounded-full ${option.color} ${selectedAvatar === option.id ? 'ring-2 ring-offset-2 ring-blue-500' : ''}`}
                                         onClick={() => setSelectedAvatar(option.id)}
                                     />
                                 ))}
@@ -136,6 +195,25 @@ const Profile = () => {
                             <label className="block text-sm font-medium mb-2">Two-Factor Authentication</label>
                             <Button onClick={handleToggle2FA}>
                                 {is2FAEnabled ? 'Disable 2FA' : 'Enable 2FA'}
+                            </Button>
+                        </div>
+
+                        {/* Activity Logs */}
+                        <div>
+                            <h2 className="text-xl font-semibold">Activity Logs</h2>
+                            <ul className="list-disc pl-5">
+                                {activityLogs.map((log, index) => (
+                                    <li key={index}>
+                                        {log.description} - {new Date(log.created_at).toLocaleString()}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Delete Account */}
+                        <div>
+                            <Button onClick={handleDeleteAccount} className="bg-red-500 text-white">
+                                Delete Account
                             </Button>
                         </div>
                     </div>
