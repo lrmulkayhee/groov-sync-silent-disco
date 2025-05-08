@@ -14,6 +14,7 @@ export interface Song {
     bpm: number;
     duration?: number;
     service: 'spotify' | 'apple';
+    audioUrl?: string;
 }
 
 interface SongCardProps {

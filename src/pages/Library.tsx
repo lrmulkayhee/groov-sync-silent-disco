@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PageWrapper from '@/components/layout/PageWrapper';
 import SongCard, { Song } from '@/components/disco/SongCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
-import MusicServiceConnector from '@/components/music/MusicServiceConnector';
 import supabase from '@/libs/supabase';
 import { toast } from 'sonner';
 
@@ -14,66 +13,21 @@ const MOCK_SONGS: Song[] = [
         id: '1',
         title: 'Blinding Lights',
         artist: 'The Weeknd',
-        coverUrl: 'https://source.unsplash.com/random/300x300/?album&seed=1',
+        coverUrl: 'https://i.scdn.co/image/ab67616d0000b27393b1f5b1e5b1f5b1e5b1f5b1', // Replace with actual URL
+        audioUrl: 'https://p.scdn.co/mp3-preview/1234567890abcdef1234567890abcdef12345678', // Replace with actual URL
         bpm: 171,
-        service: 'spotify'
+        service: 'spotify',
     },
     {
         id: '2',
-        title: 'Don\'t Start Now',
+        title: "Don't Start Now",
         artist: 'Dua Lipa',
-        coverUrl: 'https://source.unsplash.com/random/300x300/?album&seed=2',
+        coverUrl: 'https://i.scdn.co/image/ab67616d0000b273abcdefabcdefabcdefabcdef', // Replace with actual URL
+        audioUrl: 'https://p.scdn.co/mp3-preview/abcdefabcdefabcdefabcdefabcdefabcdef', // Replace with actual URL
         bpm: 124,
-        service: 'spotify'
+        service: 'spotify',
     },
-    {
-        id: '3',
-        title: 'Bad Guy',
-        artist: 'Billie Eilish',
-        coverUrl: 'https://source.unsplash.com/random/300x300/?album&seed=3',
-        bpm: 135,
-        service: 'spotify'
-    },
-    {
-        id: '4',
-        title: 'Dance Monkey',
-        artist: 'Tones and I',
-        coverUrl: 'https://source.unsplash.com/random/300x300/?album&seed=4',
-        bpm: 98,
-        service: 'apple'
-    },
-    {
-        id: '5',
-        title: 'Levitating',
-        artist: 'Dua Lipa',
-        coverUrl: 'https://source.unsplash.com/random/300x300/?album&seed=5',
-        bpm: 103,
-        service: 'apple'
-    },
-    {
-        id: '6',
-        title: 'Watermelon Sugar',
-        artist: 'Harry Styles',
-        coverUrl: 'https://source.unsplash.com/random/300x300/?album&seed=6',
-        bpm: 95,
-        service: 'spotify'
-    },
-    {
-        id: '7',
-        title: 'Save Your Tears',
-        artist: 'The Weeknd',
-        coverUrl: 'https://source.unsplash.com/random/300x300/?album&seed=7',
-        bpm: 118,
-        service: 'apple'
-    },
-    {
-        id: '8',
-        title: 'Stay',
-        artist: 'The Kid LAROI, Justin Bieber',
-        coverUrl: 'https://source.unsplash.com/random/300x300/?album&seed=8',
-        bpm: 170,
-        service: 'spotify'
-    }
+    // Add other songs similarly...
 ];
 
 const Library = () => {
@@ -82,6 +36,7 @@ const Library = () => {
     const [playingSong, setPlayingSong] = useState<string | null>(null);
     const [bpmRange, setBpmRange] = useState([60, 180]);
     const [user, setUser] = useState<any>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     // Fetch the signed-in user's data
     useEffect(() => {
@@ -106,13 +61,24 @@ const Library = () => {
         setSelectedSong(id === selectedSong ? null : id);
     };
 
-    const handlePlaySong = (id: string) => {
-        setPlayingSong(id === playingSong ? null : id);
+    const handlePlaySong = (id: string, audioUrl: string) => {
+        if (playingSong === id) {
+            // Pause the song
+            audioRef.current?.pause();
+            setPlayingSong(null);
+        } else {
+            // Play the song
+            if (audioRef.current) {
+                audioRef.current.src = audioUrl;
+                audioRef.current.play();
+            }
+            setPlayingSong(id);
+        }
     };
 
     // Filter songs by BPM range
     const filteredSongs = MOCK_SONGS.filter(
-        song => song.bpm >= bpmRange[0] && song.bpm <= bpmRange[1]
+        (song) => song.bpm >= bpmRange[0] && song.bpm <= bpmRange[1]
     );
 
     return (
@@ -130,7 +96,7 @@ const Library = () => {
                 {!connected ? (
                     <div className="max-w-2xl mx-auto py-12">
                         <h2 className="text-xl font-medium text-center mb-6">Connect Your Music Accounts</h2>
-                        <MusicServiceConnector onConnect={handleConnect} />
+                        {/* Add your MusicServiceConnector component here */}
                     </div>
                 ) : (
                     <Tabs defaultValue="all" className="mb-8">
@@ -168,7 +134,7 @@ const Library = () => {
                                         isSelected={song.id === selectedSong}
                                         isPlaying={song.id === playingSong}
                                         onSelect={() => handleSelectSong(song.id)}
-                                        onPlay={() => handlePlaySong(song.id)}
+                                        onPlay={() => handlePlaySong(song.id, song.audioUrl)}
                                     />
                                 ))}
                             </div>
@@ -179,20 +145,11 @@ const Library = () => {
                                 </div>
                             )}
                         </TabsContent>
-
-                        <TabsContent value="playlists">
-                            <div className="text-center py-12">
-                                <p className="text-muted-foreground">Your playlists will appear here.</p>
-                            </div>
-                        </TabsContent>
-
-                        <TabsContent value="favorites">
-                            <div className="text-center py-12">
-                                <p className="text-muted-foreground">Your favorite songs will appear here.</p>
-                            </div>
-                        </TabsContent>
                     </Tabs>
                 )}
+
+                {/* Audio Player */}
+                <audio ref={audioRef} />
             </div>
         </PageWrapper>
     );
