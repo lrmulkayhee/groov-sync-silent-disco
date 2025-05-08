@@ -1,45 +1,62 @@
-import React from 'react';
-import PageWrapper from '@/components/layout/PageWrapper';
-import CreateDiscoForm from '@/components/disco/CreateDiscoForm';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import MusicServiceConnector from '@/components/music/MusicServiceConnector';
-import { toast } from 'sonner';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider'; // Ensure your UI library supports range sliders
 
-const CreateDisco = () => {
-    const handleConnect = (service: 'spotify' | 'apple') => {
-        console.log(`Connected to ${service}`);
+interface CreateDiscoFormProps {
+    onSubmit: (data: { name: string; bpmRange: [number, number] }) => void; // Updated to include bpmRange
+    isCreating: boolean;
+}
+
+const CreateDiscoForm: React.FC<CreateDiscoFormProps> = ({ onSubmit, isCreating }) => {
+    const [name, setName] = useState('');
+    const [bpmRange, setBpmRange] = useState<[number, number]>([60, 200]); // Default range
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!name) {
+            alert('Please enter a name for the disco session.');
+            return;
+        }
+        onSubmit({ name, bpmRange });
     };
 
     return (
-        <PageWrapper>
-            <div className="container px-4 py-8 max-w-4xl">
-                <h1 className="text-3xl font-bold mb-2">Create a Silent Disco</h1>
-                <p className="text-muted-foreground mb-8">
-                    Set up your own synchronized groove session
-                </p>
-
-                <Tabs defaultValue="create" className="mb-8">
-                    <TabsList className="grid w-full grid-cols-2 mb-8">
-                        <TabsTrigger value="create">Create Session</TabsTrigger>
-                        <TabsTrigger value="connect">Connect Music</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="create" className="flex justify-center">
-                        <CreateDiscoForm />
-                    </TabsContent>
-
-                    <TabsContent value="connect">
-                        <div className="max-w-2xl mx-auto">
-                            <p className="text-center text-muted-foreground mb-6">
-                                Connect your music streaming accounts to access your library and playlists
-                            </p>
-                            <MusicServiceConnector onConnect={handleConnect} />
-                        </div>
-                    </TabsContent>
-                </Tabs>
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
+            <div>
+                <Label htmlFor="name">Disco Name</Label>
+                <Input
+                    id="name"
+                    type="text"
+                    placeholder="Enter disco name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                />
             </div>
-        </PageWrapper>
+            <div>
+                <Label htmlFor="bpmRange">BPM Range</Label>
+                <div className="flex items-center gap-4">
+                    <Slider
+                        id="bpmRange"
+                        value={bpmRange}
+                        onValueChange={(value) => setBpmRange(value as [number, number])}
+                        min={60}
+                        max={200}
+                        step={1}
+                        // Ensure the Slider component supports range sliders or use a library/component that does
+                    />
+                    <div className="text-sm text-muted-foreground">
+                        {bpmRange[0]} - {bpmRange[1]} BPM
+                    </div>
+                </div>
+            </div>
+            <Button type="submit" disabled={isCreating}>
+                {isCreating ? 'Creating...' : 'Create Disco'}
+            </Button>
+        </form>
     );
 };
 
-export default CreateDisco;
+export default CreateDiscoForm;

@@ -6,6 +6,7 @@ import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import supabase from '@/libs/supabase';
 import { toast } from 'sonner';
+import MusicServiceConnector from '@/components/music/MusicServiceConnector';
 
 // Mock data for songs
 const MOCK_SONGS: Song[] = [
@@ -13,8 +14,8 @@ const MOCK_SONGS: Song[] = [
         id: '1',
         title: 'Blinding Lights',
         artist: 'The Weeknd',
-        coverUrl: 'https://i.scdn.co/image/ab67616d0000b27393b1f5b1e5b1f5b1e5b1f5b1', // Replace with actual URL
-        audioUrl: 'https://p.scdn.co/mp3-preview/1234567890abcdef1234567890abcdef12345678', // Replace with actual URL
+        coverUrl: 'https://i.scdn.co/image/ab67616d0000b27393b1f5b1e5b1f5b1e5b1f5b1',
+        audioUrl: 'https://p.scdn.co/mp3-preview/1234567890abcdef1234567890abcdef12345678',
         bpm: 171,
         service: 'spotify',
     },
@@ -22,12 +23,20 @@ const MOCK_SONGS: Song[] = [
         id: '2',
         title: "Don't Start Now",
         artist: 'Dua Lipa',
-        coverUrl: 'https://i.scdn.co/image/ab67616d0000b273abcdefabcdefabcdefabcdef', // Replace with actual URL
-        audioUrl: 'https://p.scdn.co/mp3-preview/abcdefabcdefabcdefabcdefabcdefabcdef', // Replace with actual URL
+        coverUrl: 'https://i.scdn.co/image/ab67616d0000b273abcdefabcdefabcdefabcdef',
+        audioUrl: 'https://p.scdn.co/mp3-preview/abcdefabcdefabcdefabcdefabcdefabcdef',
         bpm: 124,
         service: 'spotify',
     },
-    // Add other songs similarly...
+    {
+        id: '3',
+        title: 'Bad Guy',
+        artist: 'Billie Eilish',
+        coverUrl: 'https://i.scdn.co/image/ab67616d0000b273abcdefabcdefabcdefabcdef',
+        audioUrl: 'https://p.scdn.co/mp3-preview/abcdefabcdefabcdefabcdefabcdefabcdef',
+        bpm: 135,
+        service: 'spotify',
+    },
 ];
 
 const Library = () => {
@@ -36,17 +45,23 @@ const Library = () => {
     const [playingSong, setPlayingSong] = useState<string | null>(null);
     const [bpmRange, setBpmRange] = useState([60, 180]);
     const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     // Fetch the signed-in user's data
     useEffect(() => {
         const fetchUser = async () => {
+            setLoading(true);
             const { data: { user }, error } = await supabase.auth.getUser();
-            if (error) {
-                console.error('Error fetching user:', error.message);
+            if (error || !user) {
+                console.error('Error fetching user:', error?.message || 'No user found');
+                toast.error('You must be logged in to access this feature.');
+                setConnected(false);
             } else {
                 setUser(user);
+                setConnected(true);
             }
+            setLoading(false);
         };
 
         fetchUser();
@@ -70,7 +85,9 @@ const Library = () => {
             // Play the song
             if (audioRef.current) {
                 audioRef.current.src = audioUrl;
-                audioRef.current.play();
+                audioRef.current
+                    .play()
+                    .catch((error) => console.error('Error playing audio:', error));
             }
             setPlayingSong(id);
         }
@@ -80,6 +97,16 @@ const Library = () => {
     const filteredSongs = MOCK_SONGS.filter(
         (song) => song.bpm >= bpmRange[0] && song.bpm <= bpmRange[1]
     );
+
+    if (loading) {
+        return (
+            <PageWrapper>
+                <div className="container px-4 py-8">
+                    <p>Loading...</p>
+                </div>
+            </PageWrapper>
+        );
+    }
 
     return (
         <PageWrapper>
@@ -96,7 +123,7 @@ const Library = () => {
                 {!connected ? (
                     <div className="max-w-2xl mx-auto py-12">
                         <h2 className="text-xl font-medium text-center mb-6">Connect Your Music Accounts</h2>
-                        {/* Add your MusicServiceConnector component here */}
+                        <MusicServiceConnector onConnect={handleConnect} />
                     </div>
                 ) : (
                     <Tabs defaultValue="all" className="mb-8">
