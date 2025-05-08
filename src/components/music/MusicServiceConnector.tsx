@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, AppleIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface MusicServiceProps {
@@ -23,11 +22,34 @@ const AppleMusicLogo = () => (
 );
 
 const MusicServiceConnector = ({ onConnect }: MusicServiceProps) => {
-    const handleConnect = (service: 'spotify' | 'apple') => {
-        // In a real app, we would authenticate with the music service here
-        // For now, we'll just simulate it with a toast
-        toast.success(`Connected to ${service === 'spotify' ? 'Spotify' : 'Apple Music'}!`);
-        onConnect(service);
+    const handleSpotifyConnect = () => {
+        const clientId = 'YOUR_SPOTIFY_CLIENT_ID';
+        const redirectUri = 'http://localhost:3000/callback'; // Replace with your redirect URI
+        const scopes = 'playlist-read-private user-read-email';
+
+        const authUrl = `https://accounts.spotify.com/authorize?response_type=token&client_id=${clientId}&scope=${encodeURIComponent(
+            scopes
+        )}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+
+        window.location.href = authUrl;
+        onConnect('spotify');
+    };
+
+    const handleAppleMusicConnect = async () => {
+        const token = 'YOUR_APPLE_MUSIC_TOKEN'; // Replace with your MusicKit token
+        const MusicKit = (window as any).MusicKit;
+
+        const music = MusicKit.configure({
+            developerToken: token,
+            app: {
+                name: 'GroovSync',
+                build: '1.0.0',
+            },
+        });
+
+        await music.authorize();
+        toast.success('Connected to Apple Music!');
+        onConnect('apple');
     };
 
     return (
@@ -45,7 +67,7 @@ const MusicServiceConnector = ({ onConnect }: MusicServiceProps) => {
                 <CardContent>
                     <Button
                         className="w-full bg-[#1ED760] hover:bg-[#1DB954] text-black"
-                        onClick={() => handleConnect('spotify')}
+                        onClick={handleSpotifyConnect}
                     >
                         Connect Spotify
                     </Button>
@@ -65,7 +87,7 @@ const MusicServiceConnector = ({ onConnect }: MusicServiceProps) => {
                 <CardContent>
                     <Button
                         className="w-full bg-gradient-to-r from-[#FA233B] to-[#FB5C74] hover:opacity-90 text-white"
-                        onClick={() => handleConnect('apple')}
+                        onClick={handleAppleMusicConnect}
                     >
                         Connect Apple Music
                     </Button>
